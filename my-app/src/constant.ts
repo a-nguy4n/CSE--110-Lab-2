@@ -1,6 +1,6 @@
-import { Label } from "./types";
+import { Label, Note } from "./types";
 
-export const dummyNotesList = [
+export const dummyNotesList: Note[] = [
     {
         id: 1,
         title: "test note 1 title",

@@ -14,9 +14,7 @@ export function ClickCounter() {
    
     const theme = useContext(ThemeContext);
     return (
-        <div
-        
-        className='counterStyle'
+        <div className='counterStyle'
 
         style={{
             background: theme.background,
