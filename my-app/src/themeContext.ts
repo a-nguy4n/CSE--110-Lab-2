@@ -6,8 +6,8 @@ export const themes = {
    background: '#eeeeee',
  },
  dark: {
-   foreground: '#ffffff',
-   background: '#222222',
+   foreground: '#0047AB',
+   background: '#89CFF0', 
  },
 };
 

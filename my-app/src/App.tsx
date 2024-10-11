@@ -54,64 +54,64 @@ function App() {
 
   return (
     <ThemeContext.Provider value={currentTheme}> 
-      <div className='app-container' style={{ background: currentTheme.background, color: currentTheme.foreground }}>
-        <div className="note-individual">
-          <form className="note-form" onSubmit={createNoteHandler}>
-            <div>
-              <input
-                placeholder="Note Title"
-                onChange={(event) => setCreateNote({ ...createNote, title: event.target.value })}
-                required
-              />
+        <div className='app-container'>
+          <div className="note-individual" >
+            <form className="note-form" onSubmit={createNoteHandler}>
+              <div>
+                <input
+                  placeholder="Note Title"
+                  onChange={(event) => setCreateNote({ ...createNote, title: event.target.value })}
+                  required
+                />
+              </div>
+              
+              <div>
+                <textarea
+                  placeholder="Note Content"
+                  onChange={(event) => setCreateNote({ ...createNote, content: event.target.value })}
+                  required
+                />
+              </div>
+            
+              <div>
+                <select
+                  onChange={(event) => setCreateNote({ ...createNote, label: event.target.value as Label })}
+                  required
+                >
+                  <option value={Label.other}>-- Please Choose a Label --</option>
+                  <option value={Label.personal}>Personal</option>
+                  <option value={Label.study}>Study</option>
+                  <option value={Label.work}>Work</option>
+                  <option value={Label.toDo}>To Do's</option>
+                  <option value={Label.random}>Random</option>
+                </select>
+              </div>
+            
+              <div><button type="submit">Create Note</button></div>
+            </form>
+
+            <div className="notes-grid" style={{ background: currentTheme.background, color: currentTheme.foreground}}>
+              {notes.map((note) => (
+                <div key={note.id} className="note-item">
+                  <div className="notes-header">
+                    <FavoriteNotes 
+                      note={note}
+                      handleFavorite={handleFavorite}
+                      isFavorited={favNotes.some(likedNote => likedNote.id === note.id)}
+                    />
+                    <button onClick={() => deleteNoteHandler(note.id)}>x</button>
+                  </div>
+                  <h2 contentEditable="true">{note.title}</h2>
+                  <p contentEditable="true">{note.content}</p>
+                  <p contentEditable="true">{note.label}</p>
+                </div>
+              ))}
             </div>
             
-            <div>
-              <textarea
-                placeholder="Note Content"
-                onChange={(event) => setCreateNote({ ...createNote, content: event.target.value })}
-                required
-              />
-            </div>
-           
-            <div>
-              <select
-                onChange={(event) => setCreateNote({ ...createNote, label: event.target.value as Label })}
-                required
-              >
-                <option value={Label.other}>-- Please Choose a Label --</option>
-                <option value={Label.personal}>Personal</option>
-                <option value={Label.study}>Study</option>
-                <option value={Label.work}>Work</option>
-                <option value={Label.toDo}>To Do's</option>
-                <option value={Label.random}>Random</option>
-              </select>
-            </div>
-           
-            <div><button type="submit">Create Note</button></div>
-          </form>
-
-          <div className="notes-grid">
-            {notes.map((note) => (
-              <div key={note.id} className="note-item">
-                <div className="notes-header">
-                  <FavoriteNotes 
-                    note={note}
-                    handleFavorite={handleFavorite}
-                    isFavorited={favNotes.some(likedNote => likedNote.id === note.id)}
-                  />
-                   <button onClick={() => deleteNoteHandler(note.id)}>x</button>
-                </div>
-                <h2>{note.title}</h2>
-                <p>{note.content}</p>
-                <p>{note.label}</p>
-              </div>
-            ))}
+            <FavoriteColumn favNotes={favNotes}/>
+            <ToggleTheme changeTheme={changeTheme}/>
           </div>
-          
-          <FavoriteColumn favNotes={favNotes}/>
-          <ToggleTheme changeTheme={changeTheme}/>
-        </div>
-      </div> 
+        </div> 
     </ThemeContext.Provider>
   );
 }
