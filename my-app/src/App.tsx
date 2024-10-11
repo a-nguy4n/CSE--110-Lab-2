@@ -1,18 +1,54 @@
-import React from 'react';
-//import logo from './logo.svg';
+import React, {useContext, useState} from 'react';
 import './App.css';
-
 import { Label, Note } from "./types"; // Import the Label type from the appropriate module
 import { dummyNotesList } from "./constant"; // Import the dummyNotesList from the appropriate module
-import {ClickCounter} from "./hooksExercise"; 
-import {FavoriteNotes, FavoriteColumn} from "./favoriteNotesHook";
+import { FavoriteNotes, FavoriteColumn } from "./favoriteNotesHook";
+import { ToggleTheme } from './themeToggleHook';
+import { ThemeContext, themes } from './themeContext';
+
 
 
 function App() {
 
+  // *** Liking Notes ***
+  // adding state to track list of Fav Notes 
+  // handleFav function to add + remove notes from favorited list
+
+  const [favNotes, setFavNotes] = useState<Note[]>([]);
+  const handleFavorite = (note: Note) => {
+    if(favNotes.some(likedNote => likedNote.id === note.id)){
+      setFavNotes(favNotes.filter(likedNote => likedNote.id !== note.id));
+    }
+
+    else{
+      setFavNotes([...favNotes, note]);
+    }
+  };
+
+  // *** Toggle Theme ***
+  const [currentTheme, setCurrentTheme] = useState(themes.light); 
+  
+  const changeTheme = () => {
+    setCurrentTheme(currentTheme === themes.light ? themes.dark : themes.light);
+  };
+
+// *** Create Notes ***
+
+  const [notes, setNotes] = useState(dummyNotesList); 
+  const initialNote = {
+    id: -1,
+    title: "",
+    content: "",
+    label: Label.other,
+  };
+  const [createNote, setCreateNote] = useState(initialNote);
+
 
   return (
-    <div className='app-container'>
+    <ThemeContext.Provider value={currentTheme}> 
+      <div className='app-container'
+       style={{ background: currentTheme.background, color: currentTheme.foreground }}
+      >
       <div className="note-individual">
       <form className="note-form">
 
@@ -38,7 +74,13 @@ function App() {
                 key={note.id}
                 className="note-item">
                 <div className="notes-header">
-                  <FavoriteNotes note={note}/>
+                  <FavoriteNotes 
+                  note={note}
+                  handleFavorite={handleFavorite}
+                  isFavorited={favNotes.some(likedNote => likedNote.id === note.id)}
+                  
+                  
+                  />
                   <button>x</button>
       
                 </div>
@@ -48,12 +90,15 @@ function App() {
               </div>
             ))}
           </div>
-            {/* <ClickCounter/> */}
-            <FavoriteColumn/>
+      
+            <FavoriteColumn favNotes={favNotes}/>
+            <ToggleTheme changeTheme={changeTheme}/>
         
       </div>
-    </div>
- 
+    </div> 
+  
+  </ThemeContext.Provider>
+  
   );
 }
 

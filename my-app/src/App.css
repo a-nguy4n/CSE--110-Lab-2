@@ -16,7 +16,6 @@
   flex-direction: column;
  }
 
-
 /*-------------------------------------------------------------------------------*/
 
  body {
@@ -148,4 +147,12 @@ input {
   background-color: white; 
   border: 1px solid #ccc; 
   z-index: 1000; 
+  overflow-y: auto;
+}
+
+.ToggleThemeButton{
+  position : fixed;
+  bottom: 20px; 
+  right: 20px;
+  
 }
