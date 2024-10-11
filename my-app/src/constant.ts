@@ -44,24 +44,5 @@ export const dummyNotesList: Note[] = [
         content: "test note 7 content",
         label: Label.work,
     },
-    {
-        id: 8,
-        title: "test note 8 title",
-        content: "test note 8 content",
-        label: Label.study,
-    },
-    {
-        id: 9,
-        title: "test note 9 title",
-        content: "test note 9 content",
-        label: Label.study,
-    },
-    {
-        id: 10,
-        title: "test note 10 title",
-        content: "test note 10 content",
-        label: Label.personal,
-    },
 
-    
  ]

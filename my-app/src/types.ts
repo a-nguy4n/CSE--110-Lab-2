@@ -3,6 +3,8 @@ export enum Label {
     study = "study",
     work = "work",
     other = "other",
+    toDo = "toDo",
+    random = "random"
  }
  
  export type Note = {
