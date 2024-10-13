@@ -12,4 +12,6 @@ export enum Label {
     title: string;
     content: string;
     label: Label;
+    fontColor: string;
+    fontStyle: string;
  };

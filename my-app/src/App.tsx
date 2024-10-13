@@ -19,6 +19,8 @@ function App() {
     title: "",
     content: "",
     label: Label.other,
+    fontStyle: 'Arial',
+    fontColor: '#000000'
   };
 
   const [createNote, setCreateNote] = useState<Note>(initialNote);
@@ -41,7 +43,12 @@ function App() {
   // Create note handler
   const createNoteHandler = (event: React.FormEvent) => {
     event.preventDefault(); // Prevent default form submission behavior
-    const newNote = {...createNote, id: notes.length,};
+    const newNote = {
+      ...createNote, 
+      id: notes.length,
+      fontColor: createNote.fontColor,
+      fontStyle: createNote.fontStyle,
+    };
     setNotes([...notes, newNote]); // Add the new note to the notes list
     setCreateNote(initialNote); // Reset createNote state
   };
@@ -87,6 +94,31 @@ function App() {
                 </select>
               </div>
             
+              <div>
+                <label>Font Color:</label>
+                <input  
+                  type="color"
+                  value={createNote.fontColor}
+                  onChange={(event) => setCreateNote({...createNote, fontColor: event.target.value})}
+                  >
+                  </input>
+              </div>
+             
+              <div>
+                <label>Font Style:</label>
+                <select 
+                  value={createNote.fontStyle}
+                  onChange={(event) => setCreateNote({...createNote, fontStyle: event.target.value})}
+                >
+                  <option value="Arial"> Arial </option>
+                  <option value="Times New Roman"> Times New Roman</option>
+                  <option value="Courier New"> Courier New </option>
+                  <option value="Georgia"> Georgia </option>
+                  <option value="Poppins"> Poppins </option>
+                
+                </select>
+              </div>
+
               <div><button type="submit">Create Note</button></div>
             </form>
 
@@ -101,9 +133,24 @@ function App() {
                     />
                     <button onClick={() => deleteNoteHandler(note.id)}>x</button>
                   </div>
-                  <h2 contentEditable="true">{note.title}</h2>
-                  <p contentEditable="true">{note.content}</p>
-                  <p contentEditable="true">{note.label}</p>
+                  <h2 contentEditable="true"
+                       style={{ color: note.fontColor, fontFamily: note.fontStyle }}
+                  >
+                    {note.title}  
+                  </h2>
+                 
+                  <p contentEditable="true"
+                     style={{ color: note.fontColor, fontFamily: note.fontStyle }}
+                  >
+                    {note.content}
+                  </p>
+                 
+                  <p contentEditable="true"
+                     style={{ color: note.fontColor, fontFamily: note.fontStyle }}
+                  >
+                    {note.label}
+                  </p>
+                
                 </div>
               ))}
             </div>
