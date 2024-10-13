@@ -31,6 +31,7 @@ function App() {
       setFavNotes(favNotes.filter(likedNote => likedNote.id !== note.id));
     } else {
       setFavNotes([...favNotes, note]);
+      setCreateNote(initialNote);
     }
   };
 
@@ -45,7 +46,8 @@ function App() {
     event.preventDefault(); // Prevent default form submission behavior
     const newNote = {
       ...createNote, 
-      id: notes.length,
+      // id: notes.length,
+      id: Date.now(),
       fontColor: createNote.fontColor,
       fontStyle: createNote.fontStyle,
     };
@@ -59,6 +61,20 @@ function App() {
     setFavNotes(favNotes.filter(likedNote => likedNote.id !== id)); // Removes note from favs
   };
 
+  //Update note handler for editable content
+  const updateNoteHandler = (id: number, updatedNote: Partial<Note>) => {
+    const updatedNotes = notes.map(note =>
+      note.id === id ? { ...note, ...updatedNote } : note
+    );
+    setNotes(updatedNotes);
+
+    // Update the favorite notes if the note is in favNotes
+    const updatedFavNotes = favNotes.map(favNote =>
+      favNote.id === id ? { ...favNote, ...updatedNote } : favNote
+    );
+    setFavNotes(updatedFavNotes);
+  };
+
   return (
     <ThemeContext.Provider value={currentTheme}> 
         <div className='app-container'>
@@ -67,6 +83,7 @@ function App() {
               <div>
                 <input
                   placeholder="Note Title"
+                  value={createNote.title}
                   onChange={(event) => setCreateNote({ ...createNote, title: event.target.value })}
                   required
                 />
@@ -75,6 +92,7 @@ function App() {
               <div>
                 <textarea
                   placeholder="Note Content"
+                  value={createNote.content}
                   onChange={(event) => setCreateNote({ ...createNote, content: event.target.value })}
                   required
                 />
@@ -135,18 +153,22 @@ function App() {
                   </div>
                   <h2 contentEditable="true"
                        style={{ color: note.fontColor, fontFamily: note.fontStyle }}
+                       onBlur={(event) => updateNoteHandler(note.id, { title: event.target.innerText })}
                   >
                     {note.title}  
                   </h2>
                  
                   <p contentEditable="true"
-                     style={{ color: note.fontColor, fontFamily: note.fontStyle }}
+                     style={{ whiteSpace: 'pre-wrap', color: note.fontColor, fontFamily: note.fontStyle }}
+                     onBlur={(event) => updateNoteHandler(note.id, { title: event.target.innerText })}
                   >
                     {note.content}
                   </p>
                  
-                  <p contentEditable="true"
+                  <p className='label'
+                     contentEditable="true"
                      style={{ color: note.fontColor, fontFamily: note.fontStyle }}
+                     
                   >
                     {note.label}
                   </p>
