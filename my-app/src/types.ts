@@ -1,10 +1,10 @@
 export enum Label {
-    personal = "personal",
-    study = "study",
-    work = "work",
-    other = "other",
-    toDo = "toDo",
-    random = "random"
+    personal = "Personal",
+    study = "Study",
+    work = "Work",
+    other = "Other",
+    toDo = "To Do",
+    random = "Random"
  }
  
  export type Note = {
