@@ -15,6 +15,7 @@ export function FavoriteNotes({
     handleFavorite(note);
   };
 
+  const currentTheme = useContext(ThemeContext);
   return (
     <div className="likedNote">
       <button
@@ -22,10 +23,12 @@ export function FavoriteNotes({
         onClick={handleClick}
         style={{
           color: isFavorited ? 'red' : 'white',
+          background: 'transparent',
           fontSize: '24px',
           border: 'none',
-          background: 'transparent',
           cursor: 'pointer'
+          // background: currentTheme.background, 
+          // color: currentTheme.foreground,
         }}
       >
         {isFavorited ? '❤️' : '🤍'}

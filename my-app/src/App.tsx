@@ -14,6 +14,7 @@ function App() {
   const [notes, setNotes] = useState<Note[]>(dummyNotesList);
   
   // Initial note state
+  // used to reset the note creation after form is submitted 
   const initialNote: Note = {
     id: -1,
     title: "",
@@ -25,7 +26,7 @@ function App() {
 
   const [createNote, setCreateNote] = useState<Note>(initialNote);
   
-  // Handle adding/removing favorite notes
+  // Handle adding/removing favorited notes
   const handleFavorite = (note: Note) => {
     if (favNotes.some(likedNote => likedNote.id === note.id)) {
       setFavNotes(favNotes.filter(likedNote => likedNote.id !== note.id));
@@ -46,7 +47,6 @@ function App() {
     event.preventDefault(); // Prevent default form submission behavior
     const newNote = {
       ...createNote, 
-      // id: notes.length,
       id: Date.now(),
       fontColor: createNote.fontColor,
       fontStyle: createNote.fontStyle,
@@ -56,12 +56,14 @@ function App() {
   };
 
   //Delete note handler
+  // deletes note by its ID, also removes it from the "favorite section"
   const deleteNoteHandler = (id: number) => {
     setNotes(notes.filter(note => note.id !== id)); // Remove the note w/ specified id
     setFavNotes(favNotes.filter(likedNote => likedNote.id !== id)); // Removes note from favs
   };
 
-  //Update note handler for editable content
+  //Update note handler for editable content 
+  // Edits Made to: Font Style, Font Color, title, label, content
   const updateNoteHandler = (id: number, updatedNote: Partial<Note>) => {
     const updatedNotes = notes.map(note =>
       note.id === id ? { ...note, ...updatedNote } : note
@@ -77,7 +79,10 @@ function App() {
 
   return (
     <ThemeContext.Provider value={currentTheme}> 
-        <div className='app-container'>
+        <div className='app-container'
+               style={{ background: currentTheme.background, 
+                        color: currentTheme.foreground }} 
+                >
           <div className="note-individual" >
             <form className="note-form" onSubmit={createNoteHandler}>
               <div>
@@ -113,7 +118,7 @@ function App() {
               </div>
             
               <div>
-                <label>Font Color:</label>
+                <label>Font Color: </label>
                 <input  
                   type="color"
                   value={createNote.fontColor}
@@ -123,7 +128,7 @@ function App() {
               </div>
              
               <div>
-                <label>Font Style:</label>
+                <label>Font Style: </label>
                 <select 
                   value={createNote.fontStyle}
                   onChange={(event) => setCreateNote({...createNote, fontStyle: event.target.value})}
@@ -140,7 +145,9 @@ function App() {
               <div><button type="submit">Create Note</button></div>
             </form>
 
-            <div className="notes-grid" style={{ background: currentTheme.background, color: currentTheme.foreground}}>
+            <div className="notes-grid" 
+                  style={{ background: currentTheme.background, 
+                           color: currentTheme.foreground}}>
               {notes.map((note) => (
                 <div key={note.id} className="note-item">
                   <div className="notes-header">

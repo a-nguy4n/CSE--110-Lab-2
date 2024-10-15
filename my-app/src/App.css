@@ -145,16 +145,6 @@ input {
  color: white;
 }
 
-/* .counterStyle {
-  position: fixed; 
-  bottom: 20px; 
-  left: 20px; 
-  padding: 20px; 
-  background-color: white; 
-  border: 1px solid #ccc; 
-  z-index: 1000; 
-} */
-
 .favoritedColumn{
   position: fixed; 
   bottom: 20px; 
