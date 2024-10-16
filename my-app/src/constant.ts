@@ -65,3 +65,8 @@ export const dummyNotesList: Note[] = [
     },
 
  ]
+
+export const dummyGroceryList = [
+    { name: "Apples", isPurchased: false },
+    { name: "Bananas", isPurchased: false },
+ ]

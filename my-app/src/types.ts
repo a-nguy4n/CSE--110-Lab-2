@@ -15,3 +15,6 @@ export enum Label {
     fontColor: string;
     fontStyle: string;
  };
+
+ //Lab 3
+ export type GroceryItem = { name: string; isPurchased: boolean };

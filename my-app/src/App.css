@@ -42,7 +42,7 @@
   grid-auto-rows: minmax(250px, auto);
   gap: 15px;
   position: absolute;
-  top: 20px;
+  top: 35px;
   left: 300px;
   width: calc(100% - 350px);
   max-height: calc(100vh - 100px); 
