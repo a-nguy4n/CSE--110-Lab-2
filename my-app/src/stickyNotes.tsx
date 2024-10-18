@@ -63,7 +63,7 @@ export const StickyNotes = () =>{
     setFavNotes(favNotes.filter(likedNote => likedNote.id !== id)); // Removes note from favs
   };
 
-  //Update note handler for editable content 
+  // Update note handler for editable content 
   // Edits Made to: Font Style, Font Color, title, label, content
   const updateNoteHandler = (id: number, updatedNote: Partial<Note>) => {
     const updatedNotes = notes.map(note =>
@@ -150,7 +150,8 @@ export const StickyNotes = () =>{
                   style={{ background: currentTheme.background, 
                            color: currentTheme.foreground}}>
               {notes.map((note) => (
-                <div key={note.id} className="note-item">
+                <div key={note.id}
+                className="note-item">
                   <div className="notes-header">
                     <FavoriteNotes 
                       note={note}
@@ -166,7 +167,11 @@ export const StickyNotes = () =>{
                     {note.title}  
                   </h2>
                  
-                  <p contentEditable="true"
+                  {/* Lab 3 Update Test  */}
+                 <div>  
+                  <p  
+                     data-testid= {note.id} 
+                     contentEditable="true"
                      style={{ whiteSpace: 'pre-wrap', color: note.fontColor, fontFamily: note.fontStyle }}
                      onBlur={(event) => updateNoteHandler(note.id, { title: event.target.innerText })}
                   >
@@ -180,6 +185,7 @@ export const StickyNotes = () =>{
                   >
                     {note.label}
                   </p>
+                  </div>
                 
                 </div>
               ))}

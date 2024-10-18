@@ -1,5 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { StickyNotes } from "./stickyNotes";
+// import {document}
 
 describe("Create StickyNote", () => {
 test("renders create note form", () => {
@@ -35,9 +36,11 @@ test("creates a new note", () => {
 test("read all notes", () => {
     render(<StickyNotes/>);
 
-    const newNoteTitle = screen.getAllByPlaceholderText("Note Title");
-    const newNoteContent = screen.getAllByPlaceholderText("Note Content");
+    // to be slightly modified
+    const newNoteTitle = screen.getAllByText("test");
+    const newNoteContent = screen.getAllByText("content");
  
+    console.log("Number of notes ", newNoteTitle.length)
     for (let i=0; i<newNoteTitle.length; i++){
         expect(newNoteTitle[i]).toBeInTheDocument();
         expect(newNoteContent[i]).toBeInTheDocument();
@@ -46,4 +49,24 @@ test("read all notes", () => {
 });
 
 
+test("update notes", () => {
+  render(<StickyNotes/>);
+  const NoteId = screen.getByTestId(2);
+  NoteId.innerHTML = "<p>Note Updated</p>";
+  fireEvent.click(NoteId);
+  // const IdContent = document.getElementById("");
+  console.log(NoteId)
+  //fireEvent.change(NoteId, { target: { value: "updated" } });
 
+  const updateNote = screen.getByText("Note Updated");
+  expect(updateNote).toBeInTheDocument();
+});
+
+test("delete notes", () => {
+  render(<StickyNotes/>);
+  const XButton = screen.getAllByText("x");
+//   const oldList = screen.findAllByTestId();   UNCOMMENT
+  // const NoteId = screen.getByTestId(2);
+  fireEvent.click(XButton[0]);
+
+});
