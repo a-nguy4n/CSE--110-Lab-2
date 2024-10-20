@@ -1,5 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { StickyNotes } from "./stickyNotes";
+import { Label } from "./types";
 // import {document}
 
 describe("Create StickyNote", () => {
@@ -36,11 +37,13 @@ test("creates a new note", () => {
 test("read all notes", () => {
     render(<StickyNotes/>);
 
-    // to be slightly modified
-    const newNoteTitle = screen.getAllByText("test");
-    const newNoteContent = screen.getAllByText("content");
+    // Matching note title + content | Ex: "test note 3 title"
+    const newNoteTitle = screen.getAllByText(/test note \d+ title/i);
+    const newNoteContent = screen.getAllByText(/test note \d+ content/i);
  
     console.log("Number of notes ", newNoteTitle.length)
+    
+    // checking that each title and content in the document
     for (let i=0; i<newNoteTitle.length; i++){
         expect(newNoteTitle[i]).toBeInTheDocument();
         expect(newNoteContent[i]).toBeInTheDocument();
@@ -48,25 +51,108 @@ test("read all notes", () => {
   
 });
 
-
 test("update notes", () => {
   render(<StickyNotes/>);
-  const NoteId = screen.getByTestId(2);
-  NoteId.innerHTML = "<p>Note Updated</p>";
+  const NoteId = screen.getByTestId(2);         // grabbing note with ID #2 
+  NoteId.innerHTML = "<p>Note Updated</p>";     // directly modifying note content
   fireEvent.click(NoteId);
-  // const IdContent = document.getElementById("");
-  console.log(NoteId)
-  //fireEvent.change(NoteId, { target: { value: "updated" } });
-
-  const updateNote = screen.getByText("Note Updated");
+ 
+  console.log(NoteId)                           // for debugging 
+ 
+  const updateNote = screen.getByText("Note Updated"); // verification that note content updates
   expect(updateNote).toBeInTheDocument();
 });
 
 test("delete notes", () => {
   render(<StickyNotes/>);
-  const XButton = screen.getAllByText("x");
-//   const oldList = screen.findAllByTestId();   UNCOMMENT
-  // const NoteId = screen.getByTestId(2);
-  fireEvent.click(XButton[0]);
 
+  //grabs the delete button from first note in notes list
+  const XButton = screen.getAllByText("x")[0]; 
+
+  // grabs the element with a numbered test ID 
+  const notesCurrList = screen.getAllByTestId(/\d+/);   // *** /\d+/ expressedion to match any numeric ID 
+  
+  // checking for if notes in the notes list exist
+  expect(notesCurrList.length).toBeGreaterThan(0);
+  
+  fireEvent.click(XButton);
+
+  // Now checking if notes list length has decremented by 1
+  const updatedNotesList = screen.queryAllByTestId(/\d+/);
+  expect(updatedNotesList.length).toBe(notesCurrList.length-1);
+
+  //   const oldList = screen.findAllByTestId();   UNCOMMENT
+  // const NoteId = screen.getByTestId(2);
+});
+
+
+/***** EDGE CASE TESTS *****/
+
+test("no sticky notes", () => {
+    
+    render(<StickyNotes/>); 
+
+    const deleteButton  = screen.getAllByText("x");
+    const notesCurrList = screen.getAllByTestId(/\d+/);
+
+    expect(notesCurrList.length).toBeGreaterThan(0); 
+
+    // deletes each note 
+    for(let i = 0; i < notesCurrList.length; i++){
+        fireEvent.click(deleteButton[i]); 
+    }
+
+    // checking for the notes to now be all deleted with none left 
+    const allNotesDeleted = screen.queryAllByTestId(/\d+/);
+    expect (allNotesDeleted.length).toBe(0); 
+
+});
+
+//if a note is in the favorite section and user changes the note title, 
+// checking to see if the title is updated under favorites
+
+test("liked note title updated", () => {
+
+    render(<StickyNotes/>);
+
+    // create a note + make note as a favorite 
+    const currNoteTitle = "Homework To Do List";     // ERROR HERE _________ if we like all the notes because 
+                                                     // then there exists multiple elements with this name 
+    const noteContent = "programming assignment, worksheet, readings"; 
+
+    fireEvent.change(screen.getByPlaceholderText("Note Title"), {target: {value: currNoteTitle} });
+    fireEvent.change(screen.getByPlaceholderText("Note Content"), { target: { value: noteContent } });
+   
+    const noteLabelBoxes = screen.getAllByRole('combobox');
+    fireEvent.change(noteLabelBoxes[0], {target: {value: "Study"}});
+
+    // submit form to create
+    fireEvent.click(screen.getByText("Create Note")); 
+
+    
+    // ERROR HERE ______________ if we only try to specifically like this NEW CREATED NOTE
+    // *** liking the created note to add to favorites
+    // liking all the notes 
+    const allLikeButtons = screen.getAllByText('🤍');
+    allLikeButtons.forEach((likeButton) => {
+        fireEvent.click(likeButton); // Click each like button to like all notes
+    });
+   
+    // END ERROR ______________
+
+    
+    
+    // updating the note title 
+    const toUpdateTitle = screen.getByText(currNoteTitle);
+    fireEvent.click(toUpdateTitle);
+    fireEvent.change(toUpdateTitle, {target: {innerText: "Finished HW"}}); 
+    fireEvent.blur(toUpdateTitle); // triggering the update 
+
+    // Verification of Update in:
+    // Favorite Column 
+    const checkTitleUpdate = screen.getByText("Finished HW");
+    expect(checkTitleUpdate).toBeInTheDocument;
+
+    const favoriteColumn = screen.getByText("Finished HW");
+    expect (favoriteColumn).toContainElement(checkTitleUpdate);
 });
