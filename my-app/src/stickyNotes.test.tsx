@@ -159,9 +159,6 @@ test("no sticky notes", () => {
 
 
 
-
-
-
 // _______________ TO DO LIST TESTS _______________// 
 
 test("read all the todo lists items", () => {
@@ -194,16 +191,21 @@ test("number of items checked equals to title", () => {
 test("checking off all items and uncheck all items", () => {
     render(<ToDoList/>);
 
+    // Want to check that no items bought yet
     const itemsCounter = screen.getByText(/Items bought: \d+/).textContent;
     expect(itemsCounter).toContain("Items bought: 0");
  
     
-    const checkoffs = screen.getAllByTestId(/\d+/);
+    // const checkoffs = screen.getAllByTestId(/\d+/);
+    const checkoffs = screen.getAllByRole('checkoff');
     console.log(checkoffs);
-    for(let i = 0; i < checkoffs.length; i++){  // to check off all item 
-        fireEvent.click(checkoffs[i]);
-        //console.log("CHECKED ", checkoffs[i]);
-    }
+
+    // for(let i = 0; i < checkoffs.length; i++){  // to check off all item 
+    //     fireEvent.click(checkoffs[i]);
+    //     //console.log("CHECKED ", checkoffs[i]);
+    // }
+    //Checking off each box
+    checkoffs.forEach(checkbox => {fireEvent.click(checkbox);});
     
     const new_itemsCounter = screen.getByText(/Items bought: \d+/).textContent;
     console.log(new_itemsCounter);
@@ -213,3 +215,4 @@ test("checking off all items and uncheck all items", () => {
     //     fireEvent.click(checkoffs[i]); 
     // }
 });
+
