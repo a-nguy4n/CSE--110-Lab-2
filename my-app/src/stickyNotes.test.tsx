@@ -165,7 +165,7 @@ test("read all the todo lists items", () => {
     render(<ToDoList/>);
 
     const itemsList = screen.getAllByTestId(/\d+/);
-    expect(itemsList).toHaveLength(2); // should begin with two items in list 
+    expect(itemsList).toHaveLength(4); // should begin with two items in list 
 
 });
 
@@ -186,33 +186,73 @@ test("number of items checked equals to title", () => {
     
 });
 
-// EDGE CASE for TO DO //
+// ________ EDGE CASE for TO DO ________ //
 
-test("checking off all items and uncheck all items", () => {
-    render(<ToDoList/>);
+test("checking off all items and unchecking all items", () => {
+    render(<ToDoList />);
 
-    // Want to check that no items bought yet
-    const itemsCounter = screen.getByText(/Items bought: \d+/).textContent;
-    expect(itemsCounter).toContain("Items bought: 0");
+    // checker for initial item count
+    expect(screen.getByText(/Items bought: 0/)).toBeInTheDocument();
+
+    // want to get all checkboxes for check off
+    const checkboxes = screen.getAllByRole('checkoff');
+    
+     // checking off all items
+    let isMarked = 0; 
+
+    checkboxes.forEach((checkbox) => {
+        fireEvent.click(checkbox);
+        isMarked += 1; 
+        console.log('Checked: yes at box ' + isMarked);
+      });
+
+    // checking the updated items bought count 
+    expect(screen.getByText(`Items bought: ${checkboxes.length}`)).toBeInTheDocument();
+    console.log('how many boxes checked: ' + checkboxes.length);
+  
+    // now let's uncheck all the items
+    let tracker = checkboxes.length;
+    console.log('tracker ' + tracker);
+    
+    checkboxes.forEach((checkbox) => {
+        fireEvent.click(checkbox);
+        tracker -= 1; 
+        console.log('new tracker value ' + tracker);
+    });
+
+    // now check again to make sure the item counter reverts back to 0 value
+    expect(screen.getByText(/Items bought: 0/)).toBeInTheDocument();
+});
+
+
+
+
+// test("checking off all items and uncheck all items", () => {
+//     render(<ToDoList/>);
+
+//     // Want to check that no items bought yet
+//     const itemsCounter = screen.getByText(/Items bought: \d+/).textContent;
+//     expect(itemsCounter).toContain("Items bought: 0");
  
     
-    // const checkoffs = screen.getAllByTestId(/\d+/);
-    const checkoffs = screen.getAllByRole('checkoff');
-    console.log(checkoffs);
+//     // const checkoffs = screen.getAllByTestId(/\d+/);
+//     const checkoffs = screen.getAllByRole('checkoff');
+//     console.log(checkoffs);
 
-    // for(let i = 0; i < checkoffs.length; i++){  // to check off all item 
-    //     fireEvent.click(checkoffs[i]);
-    //     //console.log("CHECKED ", checkoffs[i]);
-    // }
-    //Checking off each box
-    checkoffs.forEach(checkbox => {fireEvent.click(checkbox);});
+//     // for(let i = 0; i < checkoffs.length; i++){  // to check off all item 
+//     //     fireEvent.click(checkoffs[i]);
+//     //     //console.log("CHECKED ", checkoffs[i]);
+//     // }
+//     //Checking off each box
+//     checkoffs.forEach(checkbox => {fireEvent.click(checkbox);});
     
-    const new_itemsCounter = screen.getByText(/Items bought: \d+/).textContent;
-    console.log(new_itemsCounter);
-    expect(new_itemsCounter).toContain(`Items bought: ${checkoffs.length}`);
+//     const new_itemsCounter = screen.getByText(/Items bought: \d+/).textContent;
+//     console.log(new_itemsCounter);
+//     expect(new_itemsCounter).toContain(`Items bought: ${checkoffs.length}`);
     
-    // for(let i = 0; i < checkoffs.length; i++){  // to UNCHECK all the items
-    //     fireEvent.click(checkoffs[i]); 
-    // }
-});
+//     // for(let i = 0; i < checkoffs.length; i++){  // to UNCHECK all the items
+//     //     fireEvent.click(checkoffs[i]); 
+//     // }
+// });
+
 

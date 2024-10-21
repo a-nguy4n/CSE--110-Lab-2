@@ -69,4 +69,6 @@ export const dummyNotesList: Note[] = [
 export const dummyGroceryList = [
     { id: 1, name: "Apples", isPurchased: false },
     { id: 2, name: "Bananas", isPurchased: false },
+    { id: 3, name: "Kiwis", isPurchased: false },
+    { id: 4, name: "Strawberries", isPurchased: false },
  ]
