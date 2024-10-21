@@ -17,7 +17,7 @@ export function ToDoList() {
    const itemName = checkbox.name;
 
    const itemIndex = items.findIndex((item) => item.name === itemName);
-   items[itemIndex] = { name: itemName, isPurchased: checkbox.checked };
+   items[itemIndex] = {id:itemIndex+1, name: itemName, isPurchased: checkbox.checked };
 
    const uncheckedItems = items.filter((item) => !item.isPurchased);
    const checkedItems = items.filter((item) => item.isPurchased);
@@ -33,7 +33,8 @@ export function ToDoList() {
 
  return (
    <div className="App">
-     <div className="App-body">
+     <div 
+     className="App-body">
      <h1>{name}'s To Do List</h1>
        Items bought: {numRemainingItems}
        <form action=".">
@@ -48,6 +49,8 @@ function ListItem(item: GroceryItem, changeHandler: ChangeEventHandler) {
  return (
    <div>
      <input
+       data-testid= {item.id}
+       role="checkoff"
        type="checkbox"
        onChange={changeHandler}
        checked={item.isPurchased}

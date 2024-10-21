@@ -17,4 +17,4 @@ export enum Label {
  };
 
  //Lab 3
- export type GroceryItem = { name: string; isPurchased: boolean };
+ export type GroceryItem = { id: number; name: string; isPurchased: boolean };

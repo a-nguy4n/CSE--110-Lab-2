@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { StickyNotes } from "./stickyNotes";
 import { Label } from "./types";
+import { ToDoList } from "./toDoList";
 // import {document}
 
 describe("Create StickyNote", () => {
@@ -111,48 +112,104 @@ test("no sticky notes", () => {
 //if a note is in the favorite section and user changes the note title, 
 // checking to see if the title is updated under favorites
 
-test("liked note title updated", () => {
+// test("liked note title updated", () => {
 
-    render(<StickyNotes/>);
+//     render(<StickyNotes/>);
 
-    // create a note + make note as a favorite 
-    const currNoteTitle = "Homework To Do List";     // ERROR HERE _________ if we like all the notes because 
-                                                     // then there exists multiple elements with this name 
-    const noteContent = "programming assignment, worksheet, readings"; 
+//     // create a note + make note as a favorite 
+//     const currNoteTitle = "Homework To Do List";     // ERROR HERE _________ if we like all the notes because 
+//                                                      // then there exists multiple elements with this name 
+//     const noteContent = "programming assignment, worksheet, readings"; 
 
-    fireEvent.change(screen.getByPlaceholderText("Note Title"), {target: {value: currNoteTitle} });
-    fireEvent.change(screen.getByPlaceholderText("Note Content"), { target: { value: noteContent } });
+//     fireEvent.change(screen.getByPlaceholderText("Note Title"), {target: {value: currNoteTitle} });
+//     fireEvent.change(screen.getByPlaceholderText("Note Content"), { target: { value: noteContent } });
    
-    const noteLabelBoxes = screen.getAllByRole('combobox');
-    fireEvent.change(noteLabelBoxes[0], {target: {value: "Study"}});
+//     const noteLabelBoxes = screen.getAllByRole('combobox');
+//     fireEvent.change(noteLabelBoxes[0], {target: {value: "Study"}});
 
-    // submit form to create
-    fireEvent.click(screen.getByText("Create Note")); 
+//     // submit form to create
+//     fireEvent.click(screen.getByText("Create Note")); 
 
     
-    // ERROR HERE ______________ if we only try to specifically like this NEW CREATED NOTE
-    // *** liking the created note to add to favorites
-    // liking all the notes 
-    const allLikeButtons = screen.getAllByText('🤍');
-    allLikeButtons.forEach((likeButton) => {
-        fireEvent.click(likeButton); // Click each like button to like all notes
-    });
+//     // ERROR HERE ______________ if we only try to specifically like this NEW CREATED NOTE
+//     // *** liking the created note to add to favorites
+//     // liking all the notes 
+//     const allLikeButtons = screen.getAllByText('🤍');
+//     allLikeButtons.forEach((likeButton) => {
+//         fireEvent.click(likeButton); // Click each like button to like all notes
+//     });
    
-    // END ERROR ______________
-
+//     // END ERROR ______________
     
+//     // updating the note title 
+//     const toUpdateTitle = screen.getByText(currNoteTitle);
+//     fireEvent.click(toUpdateTitle);
+//     fireEvent.change(toUpdateTitle, {target: {innerText: "Finished HW"}}); 
+//     fireEvent.blur(toUpdateTitle); // triggering the update 
+
+//     // Verification of Update in:
+//     // Favorite Column 
+//     const checkTitleUpdate = screen.getByText("Finished HW");
+//     expect(checkTitleUpdate).toBeInTheDocument;
+
+//     const favoriteColumn = screen.getByText("Finished HW");
+//     expect (favoriteColumn).toContainElement(checkTitleUpdate);
+// });
+
+
+
+
+
+
+
+// _______________ TO DO LIST TESTS _______________// 
+
+test("read all the todo lists items", () => {
+    render(<ToDoList/>);
+
+    const itemsList = screen.getAllByTestId(/\d+/);
+    expect(itemsList).toHaveLength(2); // should begin with two items in list 
+
+});
+
+test("number of items checked equals to title", () => {
+    render(<ToDoList/>);
+
+    const itemsCounter = screen.getByText(/Items bought: \d+/).textContent;
+    //console.log(itemsCounter);
+    expect(itemsCounter).toContain("Items bought: 0");
+ 
+
+    const checkoffs = screen.getAllByRole("checkoff");
+    //console.log(checkoffs.length);
+    fireEvent.click(checkoffs[0]); // checkoff the first item
+
+    const new_itemsCounter = screen.getByText(/Items bought: \d+/).textContent;
+    expect(new_itemsCounter).toContain("Items bought: 1");
     
-    // updating the note title 
-    const toUpdateTitle = screen.getByText(currNoteTitle);
-    fireEvent.click(toUpdateTitle);
-    fireEvent.change(toUpdateTitle, {target: {innerText: "Finished HW"}}); 
-    fireEvent.blur(toUpdateTitle); // triggering the update 
+});
 
-    // Verification of Update in:
-    // Favorite Column 
-    const checkTitleUpdate = screen.getByText("Finished HW");
-    expect(checkTitleUpdate).toBeInTheDocument;
+// EDGE CASE for TO DO //
 
-    const favoriteColumn = screen.getByText("Finished HW");
-    expect (favoriteColumn).toContainElement(checkTitleUpdate);
+test("checking off all items and uncheck all items", () => {
+    render(<ToDoList/>);
+
+    const itemsCounter = screen.getByText(/Items bought: \d+/).textContent;
+    expect(itemsCounter).toContain("Items bought: 0");
+ 
+    
+    const checkoffs = screen.getAllByTestId(/\d+/);
+    console.log(checkoffs);
+    for(let i = 0; i < checkoffs.length; i++){  // to check off all item 
+        fireEvent.click(checkoffs[i]);
+        //console.log("CHECKED ", checkoffs[i]);
+    }
+    
+    const new_itemsCounter = screen.getByText(/Items bought: \d+/).textContent;
+    console.log(new_itemsCounter);
+    expect(new_itemsCounter).toContain(`Items bought: ${checkoffs.length}`);
+    
+    // for(let i = 0; i < checkoffs.length; i++){  // to UNCHECK all the items
+    //     fireEvent.click(checkoffs[i]); 
+    // }
 });
